@@ -114,7 +114,8 @@ class UnivariateSeriesDataModule(pl.LightningDataModule):
             shuffle=False,
             persistent_workers=True,
         )
-    
+
+
 class MultivariateSeriesDataModule(pl.LightningDataModule):
     def __init__(
         self,
@@ -139,7 +140,7 @@ class MultivariateSeriesDataModule(pl.LightningDataModule):
         self.test: TimeSeriesDataSet
         self.predict: TimeSeriesDataSet
         self.setup()
-    
+
     def preprocess_data(self):
         self.data["target"] = self.data[self.target_name]
         self.data["time_index"] = np.arange(len(self.data))
@@ -154,7 +155,7 @@ class MultivariateSeriesDataModule(pl.LightningDataModule):
             train_indices, test_size=0.1, shuffle=False
         )
         return train_indices, val_indices, test_indices
-    
+
     def scale_target(self, df, indices):
         scaled_values = self.target_scaler.transform(df.loc[indices, ["target"]])
         df.loc[indices, "target"] = scaled_values
