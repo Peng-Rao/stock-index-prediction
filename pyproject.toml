@@ -32,6 +32,8 @@ jupyterlab-code-formatter = "^2.2.1"
 black = "^24.4.0"
 isort = "^5.13.2"
 onnx = "^1.16.0"
+uvicorn = "^0.29.0"
+onnxruntime = "^1.17.3"
 
 
 [build-system]
