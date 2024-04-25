@@ -1,7 +1,6 @@
 import numpy as np
 from pydantic import BaseModel, ValidationInfo, field_validator
-
-from utils import scaler_max, scaler_min, MinMaxScaler
+from utils import MinMaxScaler, scaler_max, scaler_min
 
 
 class TimeSeriesFeatures(BaseModel):

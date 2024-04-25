@@ -1,6 +1,6 @@
 import onnxruntime as rt
 from config import MODEL_PATH
-from datamodel import TimeSeriesFeatures, PredictedResult
+from datamodel import PredictedResult, TimeSeriesFeatures
 
 session = rt.InferenceSession(MODEL_PATH)
 input_name = session.get_inputs()[0].name

@@ -1,6 +1,6 @@
+from datamodel import PredictedResult, TimeSeriesFeatures
 from fastapi import APIRouter, Depends
 from predict import predict
-from datamodel import TimeSeriesFeatures, PredictedResult
 
 router = APIRouter()
 

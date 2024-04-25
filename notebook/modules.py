@@ -1,8 +1,9 @@
 from typing import Any
+
+import pytorch_lightning as pl
 import torch
 from torch import nn
 from torch.nn import functional as F
-import pytorch_lightning as pl
 
 
 class UnivariateLSTM(pl.LightningModule):
