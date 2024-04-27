@@ -165,3 +165,4 @@ lightning_logs/
 
 # checkpoints
 checkpoints/
+yfinance.cache
