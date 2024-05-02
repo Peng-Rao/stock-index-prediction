@@ -24,7 +24,6 @@ async def get_quotes(
         try:
             ticker = yf.Ticker(symbol, session=session)
             info = ticker.info  # Fetch ticker info
-            history_day = ticker.history(period="1d")
             history_3mo = ticker.history(period="3mo")
 
             quote = {
@@ -34,20 +33,19 @@ async def get_quotes(
                 "displayName": info.get("longName"),
                 "symbol": info.get("symbol"),
                 "regularMarketPrice": info.get("currentPrice"),
-                "regularMarketChange": history_day.iloc[-1]["Close"]
-                - history_day.iloc[0]["Close"],
+                "regularMarketChange": info.get("currentPrice")
+                - info.get("previousClose"),
                 "regularMarketChangePercent": (
-                    (history_day.iloc[-1]["Close"] - history_day.iloc[0]["Close"])
-                    / history_day.iloc[0]["Close"]
+                    (info.get("currentPrice") - info.get("previousClose"))
+                    / info.get("previousClose")
                 )
                 * 100,
-                "RegularMarketChangePreviousClose": info.get(
+                "regularMarketChangePreviousClose": info.get(
                     "regularMarketPreviousClose"
                 )
-                - history_day.iloc[0]["Close"],
-                "postMarketPrice": history_day.iloc[-1]["Close"],
-                "postMarketPriceChange": history_day.iloc[-1]["Close"]
-                - history_day.iloc[0]["Close"],
+                - info.get("previousClose"),
+                "postMarketPrice": 0,
+                "postMarketPriceChange": 0,
                 "regularMarketOpen": info.get("regularMarketOpen"),
                 "regularMarketDayHigh": info.get("regularMarketDayHigh"),
                 "regularMarketDayLow": info.get("regularMarketDayLow"),
