@@ -37,6 +37,7 @@ def get_stock_index_history(symbol: str) -> None:
 
 
 if __name__ == "__main__":
+    # get_stock_index_list()
     # 获取股票指数列表
     with Session(db_engine) as session:
         statement = select(StockIndex)

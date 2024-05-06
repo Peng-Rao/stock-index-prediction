@@ -17,7 +17,7 @@ class StockIndexHistory(SQLModel, table=True):
     high: float
     low: float
     close: float
-    volume: int
+    volume: float
     amount: float
 
 
