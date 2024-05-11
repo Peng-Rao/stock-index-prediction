@@ -4,10 +4,10 @@ import yfinance as yf
 from dependencies import get_yfinance_session
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-router = APIRouter()
+router = APIRouter(tags=["quote"])
 
 
-@router.get("/quote/", tags=["quote"])
+@router.get("/quote/")
 async def get_quotes(
     symbols: List[str] = Query(None), session=Depends(get_yfinance_session)
 ) -> Dict[str, Union[str, List[dict]]]:
