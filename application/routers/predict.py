@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 import joblib
 import numpy as np
 import onnxruntime as rt
@@ -11,9 +13,15 @@ scalers = get_sclaers()
 scalers = {scaler.stem: joblib.load(scaler) for scaler in scalers.values()}
 models = get_deep_models()
 models = {
-    "1_step": rt.InferenceSession(models["LSTM-Transformer-7-1"]),
-    "5_step": rt.InferenceSession(models["LSTM-Transformer-7-5"]),
-    "30_step": rt.InferenceSession(models["LSTM-Transformer-90-30"]),
+    "1_step_LSTM": rt.InferenceSession(models["LSTM-7-1"]),
+    "5_step_LSTM": rt.InferenceSession(models["LSTM-7-5"]),
+    "30_step_LSTM": rt.InferenceSession(models["LSTM-90-30"]),
+    "1_step_Transformer": rt.InferenceSession(models["Transformer-7-1"]),
+    "5_step_Transformer": rt.InferenceSession(models["Transformer-7-5"]),
+    "30_step_Transformer": rt.InferenceSession(models["Transformer-90-30"]),
+    "1_step_LSTM-Transformer": rt.InferenceSession(models["LSTM-Transformer-7-1"]),
+    "5_step_LSTM-Transformer": rt.InferenceSession(models["LSTM-Transformer-7-5"]),
+    "30_step_LSTM-Transformer": rt.InferenceSession(models["LSTM-Transformer-90-30"]),
 }
 
 n_lags = 7
@@ -24,8 +32,12 @@ class TimeSeriesSequence(BaseModel):
 
 
 class PredictRequest(BaseModel):
-    symbol: str  # 股票代码
-    step: int  # 预测步数
+    # 股票代码，默认为 sh000001
+    symbol: str = "sh000001"
+    # 选取的模型，默认为 LSTM-Transformer
+    model: str = "LSTM-Transformer"
+    # 预测步数，默认为 5
+    step: int = 5
 
 
 router = APIRouter()
@@ -34,7 +46,7 @@ router = APIRouter()
 @router.post("/predict")
 def predict(request: PredictRequest, db: Session = Depends(get_mysql_session)):
     # 获取模型和标准化器
-    model = models[f"{request.step}_step"]
+    model = models[f"{request.step}_step_{request.model}"]
     X_scaler = scalers[request.symbol + "_X_scaler"]
     y_scaler = scalers[request.symbol + "_y_scaler"]
     # 获取数据，从数据库中获取最新的 step 个数据
@@ -69,20 +81,13 @@ def predict(request: PredictRequest, db: Session = Depends(get_mysql_session)):
     prediction = model.run([output_name], {input_name: sequence.astype(np.float32)})[0]
     # 反归一化
     prediction = y_scaler.inverse_transform(prediction)
-    return prediction.tolist()
 
-
-# def predict(data: TimeSeriesFeatures) -> PredictedResult:
-#     predicted = session.run(
-#         output_names=[label_name], input_feed={input_name: data.to_numpy()}
-#     )
-#     return PredictedResult(
-#         **{"predicted": PredictedResult.transform(predicted[0][0][0])}
-#     )
-
-
-# @router.post("/predict", response_model=PredictedResult)
-# def post_predict(
-#     timeseries: TimeSeriesFeatures,
-# ):
-#     return predict(timeseries)
+    # 获取未来 5 天，并转化为2024-05-01格式字符串
+    future_dates = [
+        (datetime.now() + timedelta(days=i)).strftime("%Y-%m-%d")
+        for i in range(1, request.step + 1)
+    ]
+    prediction = prediction.flatten().tolist()
+    return [
+        {"time": date, "value": prediction[i]} for i, date in enumerate(future_dates)
+    ]
