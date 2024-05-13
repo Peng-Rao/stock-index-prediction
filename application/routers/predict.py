@@ -13,15 +13,15 @@ scalers = get_sclaers()
 scalers = {scaler.stem: joblib.load(scaler) for scaler in scalers.values()}
 models = get_deep_models()
 models = {
-    "1_step_LSTM": rt.InferenceSession(models["LSTM-7-1"]),
     "5_step_LSTM": rt.InferenceSession(models["LSTM-7-5"]),
-    "30_step_LSTM": rt.InferenceSession(models["LSTM-90-30"]),
-    "1_step_Transformer": rt.InferenceSession(models["Transformer-7-1"]),
+    "15_step_LSTM": rt.InferenceSession(models["LSTM-7-15"]),
+    "30_step_LSTM": rt.InferenceSession(models["LSTM-7-30"]),
     "5_step_Transformer": rt.InferenceSession(models["Transformer-7-5"]),
-    "30_step_Transformer": rt.InferenceSession(models["Transformer-90-30"]),
-    "1_step_LSTM-Transformer": rt.InferenceSession(models["LSTM-Transformer-7-1"]),
+    "15_step_Transformer": rt.InferenceSession(models["Transformer-7-15"]),
+    "30_step_Transformer": rt.InferenceSession(models["Transformer-7-30"]),
     "5_step_LSTM-Transformer": rt.InferenceSession(models["LSTM-Transformer-7-5"]),
-    "30_step_LSTM-Transformer": rt.InferenceSession(models["LSTM-Transformer-90-30"]),
+    "15_step_LSTM-Transformer": rt.InferenceSession(models["LSTM-Transformer-7-15"]),
+    "30_step_LSTM-Transformer": rt.InferenceSession(models["LSTM-Transformer-7-30"]),
 }
 
 n_lags = 7
