@@ -72,7 +72,6 @@ def predict(request: PredictRequest, db: Session = Depends(get_mysql_session)):
     sequence = X_scaler.transform(sequence)
     # 重塑
     sequence = sequence.reshape(1, n_lags, 4)
-    # 预测
     # 输入模型
     input_name = model.get_inputs()[0].name
     # 输出模型

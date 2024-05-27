@@ -166,3 +166,5 @@ lightning_logs/
 # checkpoints
 checkpoints/
 yfinance.cache
+lightning_logs*.zip
+ray_results/
