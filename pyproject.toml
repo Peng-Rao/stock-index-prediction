@@ -38,6 +38,7 @@ nbdime = "^4.0.1"
 scrapy = "^2.11.1"
 scrapy-fake-useragent = "^1.4.4"
 sqlmodel = "^0.0.18"
+xgboost = "^2.0.3"
 
 
 [build-system]
